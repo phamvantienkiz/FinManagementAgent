@@ -1,0 +1,314 @@
+ai-financial-advisor-mvp/
+├── docker-compose.yml
+├── .env.example
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── scripts/
+│   ├── setup_databases.py
+│   ├── generate_mock_data.py
+│   └── deploy.sh
+├── shared/
+│   ├── __init__.py
+│   ├── models/
+│   ├── utils/
+│   └── config/
+├── services/
+│   ├── user-management/
+│   ├── messaging/
+│   ├── ai-agent/
+│   ├── financial-data/
+│   └── rag/
+├── mock-data/
+│   ├── user_profiles.json
+│   ├── account_balances.json
+│   ├── transactions.json
+│   └── market_data.json
+├── api-gateway/
+│   ├── main.py
+│   ├── routes/
+│   └── middleware/
+└── docs/
+    ├── api-specs/
+    ├── architecture/
+    └── demo-scenarios/
+
+A. User Management Service
+services/user-management/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── user.py
+│   ├── schemas/
+│   │   ├── __init__.py
+│   │   └── user_schemas.py
+│   ├── api/
+│   │   ├── __init__.py
+│   │   └── users.py
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── database.py
+│   │   └── security.py
+│   └── services/
+│       ├── __init__.py
+│       └── user_service.py
+├── Dockerfile
+├── requirements.txt
+└── alembic/
+    └── versions/
+
+B. Messaging Service
+services/messaging/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── message.py
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── zalo_webhook.py
+│   │   └── sms_gateway.py
+│   ├── integrations/
+│   │   ├── __init__.py
+│   │   ├── zalo_client.py
+│   │   └── textbee_client.py
+│   └── services/
+│       ├── __init__.py
+│       └── message_service.py
+├── Dockerfile
+└── requirements.txt
+
+C. AI Agent Service
+services/ai-agent/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── agents/
+│   │   ├── __init__.py
+│   │   ├── research_agent.py
+│   │   └── financial_analyst_agent.py
+│   ├── crews/
+│   │   ├── __init__.py
+│   │   └── financial_advisory_crew.py
+│   ├── tools/
+│   │   ├── __init__.py
+│   │   ├── market_data_tool.py
+│   │   └── rag_tool.py
+│   ├── api/
+│   │   ├── __init__.py
+│   │   └── analysis.py
+│   └── services/
+│       ├── __init__.py
+│       └── ai_service.py
+├── Dockerfile
+└── requirements.txt
+
+D. Financial Service
+services/financial-data/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── market_data.py
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── stocks.py
+│   │   └── market_indices.py
+│   ├── integrations/
+│   │   ├── __init__.py
+│   │   ├── marketstack_client.py
+│   │   └── alpaca_client.py
+│   └── services/
+│       ├── __init__.py
+│       └── market_service.py
+├── Dockerfile
+└── requirements.txt
+
+E. RAG Service
+services/rag/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── document.py
+│   ├── api/
+│   │   ├── __init__.py
+│   │   └── search.py
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── vector_store.py
+│   │   └── embeddings.py
+│   ├── services/
+│   │   ├── __init__.py
+│   │   └── rag_service.py
+│   └── data/
+│       ├── documents/
+│       └── indexes/
+├── Dockerfile
+└── requirements.txt
+
+###
+
+Cấu hình Environment và Docker
+# Tạo file .env.example
+cat > .env.example << EOF
+# Database
+POSTGRES_DB=financial_advisor
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=password
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+
+MONGODB_URL=mongodb://localhost:27017/financial_advisor
+
+# APIs
+GOOGLE_GEMINI_API_KEY=your_api_key_here
+MARKETSTACK_API_KEY=your_api_key_here
+ZALO_ACCESS_TOKEN=your_token_here
+TEXTBEE_API_KEY=your_api_key_here
+
+# Services Ports
+USER_MANAGEMENT_PORT=8001
+MESSAGING_PORT=8002
+AI_AGENT_PORT=8003
+FINANCIAL_DATA_PORT=8004
+RAG_SERVICE_PORT=8005
+API_GATEWAY_PORT=8000
+EOF
+
+# Copy to actual .env file
+cp .env.example .env
+
+###
+
+Tạo Docker Compose Configuration
+
+# docker-compose.yml
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo:5.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - user-management
+      - messaging
+      - ai-agent
+    environment:
+      - USER_MANAGEMENT_URL=http://user-management:8001
+      - MESSAGING_URL=http://messaging:8002
+      - AI_AGENT_URL=http://ai-agent:8003
+
+  user-management:
+    build: ./services/user-management
+    ports:
+      - "8001:8001"
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  messaging:
+    build: ./services/messaging
+    ports:
+      - "8002:8002"
+    depends_on:
+      - redis
+    env_file:
+      - .env
+
+  ai-agent:
+    build: ./services/ai-agent
+    ports:
+      - "8003:8003"
+    depends_on:
+      - financial-data
+      - rag
+    env_file:
+      - .env
+
+  financial-data:
+    build: ./services/financial-data
+    ports:
+      - "8004:8004"
+    env_file:
+      - .env
+
+  rag:
+    build: ./services/rag
+    ports:
+      - "8005:8005"
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
+  mongodb_data:
+
+### ---------------
+
+Thiết lập User Management Service
+
+cd services/user-management
+
+# Tạo cấu trúc thư mục chi tiết
+mkdir -p app/{models,schemas,api,core,services}
+mkdir -p alembic/versions
+
+# Tạo requirements.txt cho service
+cat > requirements.txt << EOF
+fastapi==0.104.1
+uvicorn==0.24.0
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.7
+alembic==1.12.1
+pydantic==2.5.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+EOF
+
+# Tạo Dockerfile
+cat > Dockerfile << EOF
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY ./app ./app
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
+EOF
