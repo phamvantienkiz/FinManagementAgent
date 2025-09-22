@@ -15,7 +15,7 @@ A dedicated **web interface** is planned for advanced financial analytics in the
 
 Here’s the overall system flow:
 
-![System Flow](docs\img\crewflow.png)
+![System Flow](./docs/img/crewflow.png)
 
 ## 3. 🚀 Progress During Hackathon
 
