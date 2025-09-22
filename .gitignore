@@ -178,5 +178,10 @@ pyrightconfig.json
 
 # user
 key.txt
+report.md
+agent.md
+crewflow.md
+document.txt
+
 
 # End of https://www.toptal.com/developers/gitignore/api/python

@@ -1,0 +1,13 @@
+# Agent Service Dependencies
+fastapi
+uvicorn
+pydantic
+python-dotenv
+langchain
+langchain-google-genai
+langchain-huggingface
+crewai
+pinecone-client
+sentence-transformers
+crawl4ai
+requests

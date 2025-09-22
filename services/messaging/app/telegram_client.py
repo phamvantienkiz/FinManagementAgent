@@ -3,7 +3,7 @@
 Raises TelegramClientError on network or HTTP errors.
 """)
 from typing import Optional, Dict, Any
-from app import __init__ as app_pkg
+from app import http_client
 from app.config import settings
 from app.logger import get_logger
 import httpx
@@ -20,9 +20,7 @@ def _make_url(method: str) -> str:
 
 
 async def send_message(chat_id: int, text: str, parse_mode: Optional[str] = None) -> Dict[str, Any]:
-	client = app_pkg.httpx_client
-	if client is None:
-		client = app_pkg.init_httpx_client(timeout=settings.REQUEST_TIMEOUT)
+	client = http_client.get_httpx_client()
 	url = _make_url("sendMessage")
 	payload = {"chat_id": chat_id, "text": text}
 	if parse_mode:
@@ -40,7 +38,7 @@ async def send_message(chat_id: int, text: str, parse_mode: Optional[str] = None
 
 
 async def send_typing(chat_id: int) -> Dict[str, Any]:
-	client = app_pkg.httpx_client or app_pkg.init_httpx_client(timeout=settings.REQUEST_TIMEOUT)
+	client = http_client.get_httpx_client()
 	url = _make_url("sendChatAction")
 	try:
 		resp = await client.post(url, json={"chat_id": chat_id, "action": "typing"})
@@ -52,7 +50,7 @@ async def send_typing(chat_id: int) -> Dict[str, Any]:
 
 
 async def set_webhook(url: str, secret_token: Optional[str] = None) -> Dict[str, Any]:
-	client = app_pkg.httpx_client or app_pkg.init_httpx_client(timeout=settings.REQUEST_TIMEOUT)
+	client = http_client.get_httpx_client()
 	webhook_url = _make_url("setWebhook")
 	payload = {"url": url}
 	if secret_token:
@@ -67,7 +65,7 @@ async def set_webhook(url: str, secret_token: Optional[str] = None) -> Dict[str,
 
 
 async def delete_webhook() -> Dict[str, Any]:
-	client = app_pkg.httpx_client or app_pkg.init_httpx_client(timeout=settings.REQUEST_TIMEOUT)
+	client = http_client.get_httpx_client()
 	url = _make_url("deleteWebhook")
 	try:
 		resp = await client.post(url)
