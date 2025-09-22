@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-This project is an AI-powered financial advisory chatbot designed for integration into banking applications and popular messaging platforms. A dedicated web interface is planned for advanced financial analytics in the near future.
+The project is an AI-powered financial advisory chatbot that is designed to be integrated into popular banking apps or messaging platforms. A dedicated web interface is planned for advanced financial analytics in the near future.
 
 ## 2. Key Features
 
@@ -13,7 +13,7 @@ This project is an AI-powered financial advisory chatbot designed for integratio
 ## 3. Roadmap
 
 - Personal finance management: In development
-- Learn-and-invest for beginners: Planned
+- Learn-and-invest for beginners: In development
 - Advanced analytics: Planned
 
 Target date to trial the Personal Finance Management experience via Telegram bot: t.me/fin_mn_agent_bot on 2025-09-23.
