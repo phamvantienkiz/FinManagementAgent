@@ -1,4 +1,4 @@
-# 💰 AI Financial Advisor — MVP
+# 💰 AI Financial Agents
 
 ## 1. 📌 Project Overview
 
