@@ -27,8 +27,6 @@ Here’s the overall system flow:
 - 🔮 **Future**: Agents that perform in-depth analysis of financial reports and market trends.
 - 🔮 **Future**: Agents powered by FinLLMs that simulate the styles of famous investors to evaluate markets and stock codes, supporting investment decisions.
 
-🎯 **Target date** to trial the Personal Finance Management experience via Telegram bot: [t.me/fin_mn_agent_bot](https://t.me/fin_mn_agent_bot) — **2025-09-23**.
-
 ## 4. 🤝 Contributions
 
 Contributions are welcome! Please contact the team to discuss ideas and proposals.
